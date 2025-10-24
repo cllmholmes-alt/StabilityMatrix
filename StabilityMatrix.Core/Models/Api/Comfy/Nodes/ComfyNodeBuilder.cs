@@ -191,6 +191,179 @@ public class ComfyNodeBuilder
         public double Ratio { get; init; } = 1;
     }
 
+    #region VHS Nodes
+    [TypedNodeOptions(
+        Name = "VHS_VideoCombine",
+        RequiredExtensions = ["https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite"]
+    )]
+    public record VHSVideoCombine : ComfyTypedNodeBase
+    {
+        public required ImageNodeConnection Images { get; init; }
+        public int FrameRate { get; init; } = 8;
+        public int LoopCount { get; init; } = 0;
+        public string Filename { get; init; } = "AnimateDiff";
+        public string Format { get; init; } = "image/gif";
+        public bool PingpongFlag { get; init; } = false;
+        public bool SaveImage { get; init; } = true;
+    }
+
+    [TypedNodeOptions(
+        Name = "VHS_LoadVideo",
+        RequiredExtensions = ["https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite"]
+    )]
+    public record VHSLoadVideo : ComfyTypedNodeBase<ImageNodeConnection, ImageNodeConnection, ImageMaskConnection, int>
+    {
+        public required string Video { get; init; }
+        public string ForceRate { get; init; } = "0";
+        public int FrameLoadCap { get; init; } = 0;
+        public int SkipFirstFrames { get; init; } = 0;
+        public int SelectEveryNth { get; init; } = 1;
+    }
+
+    [TypedNodeOptions(
+        Name = "VHS_BatchManager",
+        RequiredExtensions = ["https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite"]
+    )]
+    public record VHSBatchManager : ComfyTypedNodeBase<LatentNodeConnection>
+    {
+        public required LatentNodeConnection Latents { get; init; }
+        public int BatchIndex { get; init; } = 0;
+        public int Length { get; init; } = 1;
+    }
+
+    [TypedNodeOptions(
+        Name = "VHS_VideoInfo",
+        RequiredExtensions = ["https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite"]
+    )]
+    public record VHSVideoInfo : ComfyTypedNodeBase<int, int, int, float>
+    {
+        public required string Video { get; init; }
+    }
+    #endregion
+
+    #region Easy Utility Nodes
+    [TypedNodeOptions(
+        Name = "easy showAnything",
+        RequiredExtensions = ["https://github.com/yolain/ComfyUI-Easy-Use"]
+    )]
+    public record EasyShowAnything : ComfyTypedNodeBase<StringNodeConnection>
+    {
+        public object? Anything { get; init; }
+    }
+
+    [TypedNodeOptions(
+        Name = "easy mathFloat",
+        RequiredExtensions = ["https://github.com/yolain/ComfyUI-Easy-Use"]
+    )]
+    public record EasyMathFloat : ComfyTypedNodeBase<float>
+    {
+        public float A { get; init; } = 0.0f;
+        public float B { get; init; } = 0.0f;
+        public string Operation { get; init; } = "add";
+    }
+
+    [TypedNodeOptions(
+        Name = "easy mathInt",
+        RequiredExtensions = ["https://github.com/yolain/ComfyUI-Easy-Use"]
+    )]
+    public record EasyMathInt : ComfyTypedNodeBase<int>
+    {
+        public int A { get; init; } = 0;
+        public int B { get; init; } = 0;
+        public string Operation { get; init; } = "add";
+    }
+
+    [TypedNodeOptions(
+        Name = "easy int",
+        RequiredExtensions = ["https://github.com/yolain/ComfyUI-Easy-Use"]
+    )]
+    public record EasyInt : ComfyTypedNodeBase<int>
+    {
+        public int Value { get; init; } = 0;
+    }
+
+    [TypedNodeOptions(
+        Name = "easy float",
+        RequiredExtensions = ["https://github.com/yolain/ComfyUI-Easy-Use"]
+    )]
+    public record EasyFloat : ComfyTypedNodeBase<float>
+    {
+        public float Value { get; init; } = 0.0f;
+    }
+
+    public record IntToFloat : ComfyTypedNodeBase<float>
+    {
+        public required int Integer { get; init; }
+    }
+
+    public record FloatToInt : ComfyTypedNodeBase<int>
+    {
+        public required float Float { get; init; }
+    }
+    #endregion
+
+    #region Face Restoration Nodes
+    [TypedNodeOptions(
+        Name = "FaceRestoreModelLoader",
+        RequiredExtensions = ["https://github.com/mav-rik/facerestore_cf"]
+    )]
+    public record FaceRestoreModelLoader : ComfyTypedNodeBase<ModelNodeConnection>
+    {
+        public required string ModelName { get; init; }
+    }
+
+    [TypedNodeOptions(
+        Name = "FaceRestoreCFWithModel",
+        RequiredExtensions = ["https://github.com/mav-rik/facerestore_cf"]
+    )]
+    public record FaceRestoreCFWithModel : ComfyTypedNodeBase<ImageNodeConnection>
+    {
+        public required ModelNodeConnection FacerestoreModel { get; init; }
+        public required ImageNodeConnection Image { get; init; }
+        public float Fidelity { get; init; } = 0.5f;
+    }
+    #endregion
+
+    #region rgthree Nodes
+    [TypedNodeOptions(
+        Name = "Label (rgthree)",
+        RequiredExtensions = ["https://github.com/rgthree/rgthree-comfy"]
+    )]
+    public record RgthreeLabel : ComfyTypedNodeBase
+    {
+        public string Text { get; init; } = "";
+        public string Color { get; init; } = "";
+        public string BgColor { get; init; } = "";
+        public int FontSize { get; init; } = 12;
+    }
+
+    [TypedNodeOptions(
+        Name = "Fast Groups Bypasser (rgthree)",
+        RequiredExtensions = ["https://github.com/rgthree/rgthree-comfy"]
+    )]
+    public record RgthreeFastGroupsBypasser : ComfyTypedNodeBase
+    {
+        public bool FastMute { get; init; } = false;
+        public bool FastBypass { get; init; } = false;
+        public bool FastGroupsMute { get; init; } = false;
+    }
+    #endregion
+
+    #region RIFE VFI Node
+    [TypedNodeOptions(
+        Name = "RIFE VFI",
+        RequiredExtensions = ["https://github.com/Fannovel16/ComfyUI-Frame-Interpolation"]
+    )]
+    public record RIFEVFI : ComfyTypedNodeBase<ImageNodeConnection>
+    {
+        public required ImageNodeConnection Frames { get; init; }
+        public string CkptName { get; init; } = "rife40.pth";
+        public int ClearCacheAfterNFrames { get; init; } = 10;
+        public int MultiplierFloatVal { get; init; } = 2;
+        public bool OptionalInterpolation { get; init; } = true;
+    }
+    #endregion
+
     public static NamedComfyNode<ImageNodeConnection> ImageUpscaleWithModel(
         string name,
         UpscaleModelNodeConnection upscaleModel,
